@@ -10,7 +10,10 @@ APA options
 narrative: 	if the citation is used inside the narrative or not.
 first: 		if it is the first time the citation is mentioned in the text.
 
-	
+TODO
+add erroroneus input to the spec (no authors or year specified for example)
+add test to see if the cite filters secondary authors
+	 
 =end
 
 
@@ -57,7 +60,7 @@ first: 		if it is the first time the citation is mentioned in the text.
 				@citation = {
 					authors: [
 						{
-							last: "Parker"
+							last: "Bradley"
 						},
 						{
 							last: "Mokhesi-Parker"
@@ -69,13 +72,12 @@ first: 		if it is the first time the citation is mentioned in the text.
 			end
 
 			describe "cite" do
-
 				it "outside the narrative" do
-					@exporter.cite(@citation, narrative:false).should == "((Parker & Mokhesi-Parker, 1998)"
+					@exporter.cite(@citation, narrative:false).should == "(Bradley & Mokhesi-Parker, 1998)"
 				end
 
 				it "inside the narrative" do
-					@exporter.cite(@citation, narrative:true).should == "Parker and Mokhesi-Parker (1998)"
+					@exporter.cite(@citation, narrative:true).should == "Bradley and Mokhesi-Parker (1998)"
 				end
 
 			end
