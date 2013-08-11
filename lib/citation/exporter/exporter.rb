@@ -1,4 +1,4 @@
-module citation
+module Citation
 
 	class Exporter
 

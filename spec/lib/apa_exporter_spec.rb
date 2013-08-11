@@ -1,5 +1,6 @@
 module Citation
 
+
 	require 'spec_helper'
 
 =begin
@@ -13,7 +14,7 @@ first: 		if it is the first time the citation is mentioned in the text.
 =end
 
 
-	describe "apa exporting" do
+	describe ExporterApa do
 	
 
 		before(:each) do
@@ -169,76 +170,85 @@ first: 		if it is the first time the citation is mentioned in the text.
 
 		describe "group or corporate authors" do
 
-			@citation = {
-				authors: [
-					{
-						last: "Harris"
-					},
-					{
-						last: "Parker"
-					},
-					{
-						last: "Mokhesi-Parker"
-					},
-					{
-						last: "Austin"
-					},
-					{
-						last: "Durkheim"
-					}
-				],
-				title: "About Life the Universe & Everything",
-				corporation: "World Bank",
-				published: Time.new(2001, 10, 31)
-			}
+			before(:all) do
+				@citation = {
+					authors: [
+						{
+							last: "Harris"
+						},
+						{
+							last: "Parker"
+						},
+						{
+							last: "Mokhesi-Parker"
+						},
+						{
+							last: "Austin"
+						},
+						{
+							last: "Durkheim"
+						}
+					],
+					title: "About Life the Universe & Everything",
+					corporation: "World Bank",
+					published: Time.new(2001, 10, 31)
+				}
 
-			@citation2 = {
-				authors: [
-					{
-						last: "Harris"
-					},
-					{
-						last: "Parker"
-					},
-					{
-						last: "Mokhesi-Parker"
-					},
-					{
-						last: "Austin"
-					},
-					{
-						last: "Durkheim"
-					}
-				],
-				title: "About Life the Universe & Everything",
-				group: "Author group",
-				published: Time.new(2001, 10, 31)
-			}
+
+
+				@citation2 = {
+					authors: [
+						{
+							last: "Harris"
+						},
+						{
+							last: "Parker"
+						},
+						{
+							last: "Mokhesi-Parker"
+						},
+						{
+							last: "Austin"
+						},
+						{
+							last: "Durkheim"
+						}
+					],
+					title: "About Life the Universe & Everything",
+					group: "Author group",
+					published: Time.new(2001, 10, 31)
+				}
+
+			end
 
 			describe "cite" do
 
 				it "outside the narrative" do
-						@exporter.cite(@citation, narrative:false).should == "(World Bank, 2001)"
-						@exporter.cite(@citation2, narrative:false).should == "(Author group, 2001)"
-					end
+					@exporter.cite(@citation, narrative:false).should == "(World Bank, 2001)"
+					@exporter.cite(@citation2, narrative:false).should == "(Author group, 2001)"
+				end
 
-					it "inside the narrative" do
-						@exporter.cite(@citation, narrative:true).should == "World Bank (2001)"
-						@exporter.cite(@citation2, narrative:true).should == "Author group (2001)"
-					end
-
+				it "inside the narrative" do
+					@exporter.cite(@citation, narrative:true).should == "World Bank (2001)"
+					@exporter.cite(@citation2, narrative:true).should == "Author group (2001)"
 				end
 
 			end
 
 		end
 
+
+
 		describe "unknown author" do
 
+			before(:all) do
+
 			@citation = {
-				title: "About Life the Universe & Everything",
-				published: Time.new(2001, 10, 31)
-			}
+					title: "About Life the Universe & Everything",
+					published: Time.new(2001, 10, 31)
+				}
+
+			end
 
 			describe "cite" do
 
@@ -254,17 +264,24 @@ first: 		if it is the first time the citation is mentioned in the text.
 
 		end
 
+
+
+
 		describe "anonymous author" do
 
-			@citation = {
-				authors: [
-					{
-						last: "Anonymous"
-					}
-				],
-				title: "About Life the Universe & Everything",
-				published: Time.new(2001, 10, 31)
-			}
+			before(:all) do
+
+				@citation = {
+					authors: [
+						{
+							last: "Anonymous"
+						}
+					],
+					title: "About Life the Universe & Everything",
+					published: Time.new(2001, 10, 31)
+				}
+
+			end
 
 			describe "cite" do
 
@@ -279,6 +296,8 @@ first: 		if it is the first time the citation is mentioned in the text.
 			end
 
 		end
+
+
 
 		describe "exact quotation" do
 
@@ -347,6 +366,9 @@ first: 		if it is the first time the citation is mentioned in the text.
 
 			end
 
+		end
+
+
 		describe "secondary source" do
 
 			before(:all) do
@@ -397,6 +419,8 @@ first: 		if it is the first time the citation is mentioned in the text.
 			end
 
 		end
+
+
 
 	end
 
