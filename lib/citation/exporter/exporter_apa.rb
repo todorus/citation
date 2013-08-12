@@ -6,61 +6,56 @@ module Citation
 			
 			result = ""
 			
-			
+			authorString = ""
+			yearString = "#{citation[:published].year}"
+			positionString = ""
 
 			if citation[:corporation] || citation[:group]
 
 				group = !citation[:corporation].nil? ? citation[:corporation] : citation[:group]
-
-				if options[:narrative]
-					result = "#{group} (#{citation[:published].year})"
-				else
-					result = "(#{group}, #{citation[:published].year})"
-				end
+				authorString = "#{group}"
 
 			else
 
-				authorCount = citation[:authors].nil? ? 0 : citation[:authors].length + (citation[:authorsSecondary] != nil ? citation[:authorsSecondary].length : 0)
+				authorCount = citation[:authors].nil? ? 0 : citation[:authors].reject{|a| a[:secondary]}.length + (citation[:authorsSecondary] != nil ? citation[:authorsSecondary].length : 0)
 
 				if authorCount == 0
-					if options[:narrative]
-						result = "#{citation[:title]} (#{citation[:published].year})"
-					else
-						result = "(#{citation[:title]}, #{citation[:published].year})"
-					end
+
+					authorString = "#{citation[:title]}"
+
 				elsif authorCount == 1
-					if options[:narrative]
-						result = "#{citation[:authors][0][:last]} (#{citation[:published].year})"
-					else
-						result = "(#{citation[:authors][0][:last]}, #{citation[:published].year})"
-					end
+
+					authorString = "#{citation[:authors][0][:last]}"
+
 				elsif authorCount == 2
-					if options[:narrative]
-						result = "#{citation[:authors][0][:last]} and #{citation[:authors][1][:last]} (#{citation[:published].year})"
-					else
-						result = "(#{citation[:authors][0][:last]} & #{citation[:authors][1][:last]}, #{citation[:published].year})"
-					end
+
+					authorString = listMultiple(citation[:authors], options[:narrative] ? "and" : "&")
+
 				elsif authorCount < 6
 
-					if options[:narrative]
-						if options[:first]
-							
-							result = listMultiple(citation[:authors])+" (#{citation[:published].year})"
-						else
-							result = "#{citation[:authors][0][:last]} et al. (#{citation[:published].year})"
-						end
-					else
-						if options[:first]
-							result = "(#{listMultiple(citation[:authors], '&')}, #{citation[:published].year})"
-						else
-							result = "(#{citation[:authors][0][:last]} et al., #{citation[:published].year})"
-						end
+					if options[:first]
+						authorString = listMultiple(citation[:authors], options[:narrative] ? "and" : "&")
+					else 
+						authorString = "#{citation[:authors][0][:last]} et al."
 					end
 
 				else
 					#more than 5
+					authorString = "#{citation[:authors][0][:last]} et al."
 				end
 
+			end
+
+			if !citation[:page].nil?
+				positionString = ", p. #{citation[:page]}"
+			elsif !citation[:paragraph].nil?
+				positionString = ", para. #{citation[:paragraph]}"
+			end
+
+			if options[:narrative]
+				result = "#{authorString} (#{yearString}#{positionString})"
+			else
+				result = "(#{authorString}, #{yearString}#{positionString})"
 			end
 				
 			return result	
