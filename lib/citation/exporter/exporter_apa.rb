@@ -11,39 +11,10 @@ module Citation
 			positionString = ""
 
 			if citation[:corporation] || citation[:group]
-
 				group = !citation[:corporation].nil? ? citation[:corporation] : citation[:group]
 				authorString = "#{group}"
-
 			else
-
-				authorCount = citation[:authors].nil? ? 0 : citation[:authors].reject{|a| a[:secondary]}.length + (citation[:authorsSecondary] != nil ? citation[:authorsSecondary].length : 0)
-
-				if authorCount == 0
-
-					authorString = "#{citation[:title]}"
-
-				elsif authorCount == 1
-
-					authorString = "#{citation[:authors][0][:last]}"
-
-				elsif authorCount == 2
-
-					authorString = listMultiple(citation[:authors], options[:narrative] ? "and" : "&")
-
-				elsif authorCount < 6
-
-					if options[:first]
-						authorString = listMultiple(citation[:authors], options[:narrative] ? "and" : "&")
-					else 
-						authorString = "#{citation[:authors][0][:last]} et al."
-					end
-
-				else
-					#more than 5
-					authorString = "#{citation[:authors][0][:last]} et al."
-				end
-
+				authorString = genAuthorString citation, options
 			end
 
 			if !citation[:page].nil?
@@ -83,6 +54,37 @@ module Citation
 			end
 			
 			result
+		end
+
+		def genAuthorString(citation, options)
+			
+			authorCount = citation[:authors].nil? ? 0 : citation[:authors].length
+			if authorCount == 0
+
+				authorString = "#{citation[:title]}"
+
+			elsif authorCount == 1
+
+				authorString = "#{citation[:authors][0][:last]}"
+
+			elsif authorCount == 2
+
+				authorString = listMultiple(citation[:authors], options[:narrative] ? "and" : "&")
+
+			elsif authorCount < 6
+
+				if options[:first]
+					authorString = listMultiple(citation[:authors], options[:narrative] ? "and" : "&")
+				else 
+					authorString = "#{citation[:authors][0][:last]} et al."
+				end
+
+			else
+				#more than 5
+				authorString = "#{citation[:authors][0][:last]} et al."
+			end
+
+			authorString
 		end
 
 	end

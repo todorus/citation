@@ -379,29 +379,28 @@ add test to see if the cite filters secondary authors
 					authors: [
 						{
 							last: "Austin"
-						}
-					],
-					authorsSecondary: [
-						{
-							last: "Smith"
-						}
-					],
-					title: "About Life the Universe & Everything",
-					published: Time.new(1998, 10, 31)
-				}
-
-				@citation2 = {
-					authors: [
-						{
-							last: "Austin"
 						},
 						{
-							last: "Smith",
-							secondary: true
+							last: "Jones"
 						}
 					],
 					title: "About Life the Universe & Everything",
-					published: Time.new(1998, 10, 31)
+					published: Time.new(1998, 10, 31),
+					secondary: {
+						authors: [
+							{
+								last: "Markinson"
+							},
+							{
+								last: "Peterson"
+							},
+							{
+								last: "Clarckson"
+							}
+						],
+						title: "Conversations with Planet",
+						published: Time.new(1976, 10, 31)
+					}
 				}
 
 			end
@@ -409,13 +408,11 @@ add test to see if the cite filters secondary authors
 			describe "cite" do
 
 				it "outside the narrative" do
-					@exporter.cite(@citation, narrative:false).should == "(Smith as cited in Austin, 1998)"
-					@exporter.cite(@citation2, narrative:false).should == "(Smith as cited in Austin, 1998)"
+					@exporter.cite(@citation, narrative:false).should == "(Markinson, Peterson & Clarckson as cited in Austin & Jones, 1998)"
 				end
 
 				it "inside the narrative" do
-					@exporter.cite(@citation, narrative:true).should == "Smith (as cited in Austin 1998)"
-					@exporter.cite(@citation2, narrative:true).should == "Smith (as cited in Austin 1998)"
+					@exporter.cite(@citation, narrative:true).should == "Markinson, Peterson & Clarckson (as cited in Austin & Jones 1998)"
 				end
 
 			end
