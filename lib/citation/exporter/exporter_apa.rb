@@ -13,6 +13,11 @@ module Citation
 			if citation[:corporation] || citation[:group]
 				group = !citation[:corporation].nil? ? citation[:corporation] : citation[:group]
 				authorString = "#{group}"
+			elsif !citation[:secondary].nil?
+				firstoptions = options.clone
+				firstoptions[:narrative] = false
+				authorString = genAuthorString citation, firstoptions
+				authorSecondaryString = genAuthorString citation[:secondary], options
 			else
 				authorString = genAuthorString citation, options
 			end
@@ -24,9 +29,17 @@ module Citation
 			end
 
 			if options[:narrative]
-				result = "#{authorString} (#{yearString}#{positionString})"
+				if authorSecondaryString.nil?
+					result = "#{authorString} (#{yearString}#{positionString})"
+				else
+					result = "#{authorSecondaryString} (as cited in #{authorString}, #{yearString}#{positionString})"
+				end
 			else
-				result = "(#{authorString}, #{yearString}#{positionString})"
+				if authorSecondaryString.nil?
+					result = "(#{authorString}, #{yearString}#{positionString})"
+				else
+					result = "(#{authorSecondaryString} as cited in #{authorString}, #{yearString}#{positionString})"
+				end
 			end
 				
 			return result	
@@ -72,6 +85,7 @@ module Citation
 				authorString = listMultiple(citation[:authors], options[:narrative] ? "and" : "&")
 
 			elsif authorCount < 6
+				#three to five authors
 
 				if options[:first]
 					authorString = listMultiple(citation[:authors], options[:narrative] ? "and" : "&")
@@ -80,7 +94,7 @@ module Citation
 				end
 
 			else
-				#more than 5
+				#more than five
 				authorString = "#{citation[:authors][0][:last]} et al."
 			end
 

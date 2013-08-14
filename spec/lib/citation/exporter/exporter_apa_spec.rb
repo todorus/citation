@@ -408,11 +408,11 @@ add test to see if the cite filters secondary authors
 			describe "cite" do
 
 				it "outside the narrative" do
-					@exporter.cite(@citation, narrative:false).should == "(Markinson, Peterson & Clarckson as cited in Austin & Jones, 1998)"
+					@exporter.cite(@citation, narrative:false, first:true).should == "(Markinson, Peterson & Clarckson as cited in Austin & Jones, 1998)"
 				end
 
 				it "inside the narrative" do
-					@exporter.cite(@citation, narrative:true).should == "Markinson, Peterson and Clarckson (as cited in Austin & Jones 1998)"
+					@exporter.cite(@citation, narrative:true, first:true).should == "Markinson, Peterson and Clarckson (as cited in Austin & Jones, 1998)"
 				end
 
 			end
