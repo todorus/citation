@@ -31,6 +31,7 @@ add test to see if the cite filters secondary authors
 				@citation = {
 					authors: [
 						{
+							first: "John Hughes",
 							last: "Austin"
 						}
 					],
@@ -47,6 +48,18 @@ add test to see if the cite filters secondary authors
 
 				it "inside the narrative" do
 					@exporter.cite(@citation, narrative:true).should == "Austin (1998)"
+				end
+
+			end
+
+			describe "generates a source reference" do
+
+				#literature
+				pending it "for a book" do
+
+				end
+				pending it "for an article" do
+
 				end
 
 			end
@@ -78,6 +91,18 @@ add test to see if the cite filters secondary authors
 
 				it "inside the narrative" do
 					@exporter.cite(@citation, narrative:true).should == "Bradley and Mokhesi-Parker (1998)"
+				end
+
+			end
+
+			describe "generates a source reference" do
+
+				#literature
+				pending it "for a book" do
+
+				end
+				pending it "for an article" do
+
 				end
 
 			end
@@ -127,6 +152,18 @@ add test to see if the cite filters secondary authors
 				end
 
 			end
+
+			describe "generates a source reference" do
+
+				#literature
+				pending it "for a book" do
+
+				end
+				pending it "for an article" do
+
+				end
+
+			end
 		end
 
 		describe "six or more authors" do
@@ -164,6 +201,18 @@ add test to see if the cite filters secondary authors
 
 				it "inside the narrative" do
 					@exporter.cite(@citation, narrative:true).should == "Harris et al. (2001)"
+				end
+
+			end
+
+			describe "generates a source reference" do
+
+				#literature
+				pending it "for a book" do
+
+				end
+				pending it "for an article" do
+
 				end
 
 			end
@@ -237,6 +286,18 @@ add test to see if the cite filters secondary authors
 
 			end
 
+			describe "generates a source reference" do
+
+				#literature
+				pending it "for a book" do
+
+				end
+				pending it "for an article" do
+
+				end
+
+			end
+
 		end
 
 
@@ -260,6 +321,18 @@ add test to see if the cite filters secondary authors
 
 				it "inside the narrative" do
 					@exporter.cite(@citation, narrative:true).should == "About Life the Universe & Everything (2001)"
+				end
+
+			end
+
+			describe "generates a source reference" do
+
+				#literature
+				pending it "for a book" do
+
+				end
+				pending it "for an article" do
+
 				end
 
 			end
@@ -293,6 +366,18 @@ add test to see if the cite filters secondary authors
 
 				it "inside the narrative" do
 					@exporter.cite(@citation, narrative:true).should == "Anonymous (2001)"
+				end
+
+			end
+
+			describe "generates a source reference" do
+
+				#literature
+				pending it "for a book" do
+
+				end
+				pending it "for an article" do
+
 				end
 
 			end
@@ -335,6 +420,18 @@ add test to see if the cite filters secondary authors
 
 				end
 
+				describe "generates a source reference" do
+
+					#literature
+					pending it "for a book" do
+
+					end
+					pending it "for an article" do
+
+					end
+
+				end
+
 			end
 
 			describe "without page numbers" do
@@ -362,6 +459,18 @@ add test to see if the cite filters secondary authors
 
 					it "inside the narrative" do
 						@exporter.cite(@citation, narrative:true).should == "Austin (1998, para. 10)"
+					end
+
+				end
+
+				describe "generates a source reference" do
+
+					#literature
+					pending it "for a book" do
+
+					end
+					pending it "for an article" do
+
 					end
 
 				end	
@@ -417,9 +526,76 @@ add test to see if the cite filters secondary authors
 
 			end
 
+			describe "generates a source reference" do
+
+				#literature
+				pending it "for a book" do
+
+				end
+				pending it "for an article" do
+
+				end
+
+			end
+
 		end
 
+		describe "other media" do
 
+			#media
+			pending it "for a sound recording" do
+
+			end
+			pending it "for a video recording" do
+
+			end
+			pending it "for television" do
+
+			end
+
+			#online
+			pending it "for a web page" do
+
+			end
+			pending it "for a blog post" do
+
+			end
+			pending it "for an online video" do
+
+			end
+			pending it "for a data set" do
+
+			end
+
+		end
+
+		describe "replace" do
+
+			it "replaces inside the narrative" do
+				text = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus quis lectus metus, at posuere neque. Sed pharetra nibh eget orci convallis at posuere leo convallis. Sed blandit augue vitae augue scelerisque bibendum. Vivamus sit amet libero turpis, non venenatis urna. <citation_inside>1</citation_inside> In blandit, odio convallis suscipit venenatis, ante ipsum cursus augue."
+
+				expected = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus quis lectus metus, at posuere neque. Sed pharetra nibh eget orci convallis at posuere leo convallis. Sed blandit augue vitae augue scelerisque bibendum. Vivamus sit amet libero turpis, non venenatis urna. Bradley and Mokhesi-Parker (1998) In blandit, odio convallis suscipit venenatis, ante ipsum cursus augue."
+				@exporter.replace(@citation, text).should == expected
+			end
+
+			it "replaces outside the narrative" do
+				text = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus quis lectus metus, at posuere neque. Sed pharetra nibh eget orci convallis at posuere leo convallis. Sed blandit augue vitae augue scelerisque bibendum. Vivamus sit amet libero turpis, non venenatis urna. <citation_outside>1</citation_outside> In blandit, odio convallis suscipit venenatis, ante ipsum cursus augue."
+
+				expected = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus quis lectus metus, at posuere neque. Sed pharetra nibh eget orci convallis at posuere leo convallis. Sed blandit augue vitae augue scelerisque bibendum. Vivamus sit amet libero turpis, non venenatis urna. (Bradley & Mokhesi-Parker, 1998) In blandit, odio convallis suscipit venenatis, ante ipsum cursus augue."
+				@exporter.replace(@citation, text).should == expected
+			end
+
+			it "replaces inside and outside the narrative" do
+				text = "Lorem ipsum dolor sit amet <citation_inside>1</citation_inside>, consectetur adipiscing elit. Phasellus quis lectus metus, at posuere neque. Sed pharetra nibh eget orci convallis at posuere leo convallis. Sed blandit augue vitae augue scelerisque bibendum. Vivamus sit amet libero turpis, non venenatis urna. <citation_outside>1</citation_outside> In blandit, odio convallis suscipit venenatis, ante ipsum cursus augue."
+
+				expected = "Lorem ipsum dolor sit amet Bradley and Mokhesi-Parker (1998), consectetur adipiscing elit. Phasellus quis lectus metus, at posuere neque. Sed pharetra nibh eget orci convallis at posuere leo convallis. Sed blandit augue vitae augue scelerisque bibendum. Vivamus sit amet libero turpis, non venenatis urna. (Bradley & Mokhesi-Parker, 1998) In blandit, odio convallis suscipit venenatis, ante ipsum cursus augue."
+				@exporter.replace(@citation, text).should == expected
+			end
+
+			pending it "is knowledgeable about the frequency of a citation" do
+				#test with apa exporter and first, not first values
+			end
+		end
 
 	end
 

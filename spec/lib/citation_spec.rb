@@ -1,9 +1,11 @@
+module Citation
+
 	require 'spec_helper'
 
 	describe Citation do
 
 		describe "replaces matched id's with the citation" do
-
+			
 			before(:all) do
 
 				citations = [
@@ -33,7 +35,7 @@
 					}
 				]
 
-				@library = Citation::Library.new(citations)
+				@library = Library.new(citations)
 
 			end
 
@@ -76,3 +78,5 @@
 		end
 
 	end
+
+end

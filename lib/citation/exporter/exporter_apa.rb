@@ -101,6 +101,12 @@ module Citation
 			authorString
 		end
 
+		def replace citation, text
+
+			
+
+		end
+
 	end
 
 end
