@@ -7,7 +7,7 @@ module Citation
 		end
 
 		def find id
-			@citations.select{|c| !c[:id].nil? && c[:id] == id }
+			@citations.select{|c| !c[:id].nil? && c[:id] == id }.first
 		end
 
 		def << citation
