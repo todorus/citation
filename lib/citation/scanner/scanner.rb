@@ -3,11 +3,11 @@ module Citation
 	class Scanner
 
 		def self.scan(text)
-			narrative = text.match(/<citation_inside>(\d+)<\/citation_inside>/)
-			nonnarrative = text.match(/<citation_outside>(\d+)<\/citation_outside>/)
+			narrative = text.scan(/<citation_inside>(\d+)<\/citation_inside>/)
+			nonnarrative = text.scan(/<citation_outside>(\d+)<\/citation_outside>/)
 
-			narrative = narrative.nil? ? [] : processScan(narrative.captures.uniq, true)
-			nonnarrative = nonnarrative.nil? ? [] : processScan(nonnarrative.captures.uniq, false)
+			narrative = narrative.nil? ? [] : processScan(narrative, true)
+			nonnarrative = nonnarrative.nil? ? [] : processScan(nonnarrative, false)
 
 			narrative + nonnarrative
 		end
@@ -27,10 +27,14 @@ module Citation
 			end
 		end
 
+		def self.find(citationId, text)
+			scan(text, false).select{|m| m[:id] == citationId}
+		end
+
 		private
 		def self.processScan(matches, narrative=false)
 			matches.each_with_index do |m,i|
-				matches[i] = {id:m.to_i, narrative:narrative}
+				matches[i] = {id:m[0].to_i, narrative:narrative}
 			end
 		end
 
