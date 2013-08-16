@@ -571,29 +571,93 @@ add test to see if the cite filters secondary authors
 
 		describe "replace" do
 
+			before(:all) do
+
+				citations = [
+					{
+						id: 2,
+						authors: [
+							{
+								first: "John Hughes",
+								last: "Austin"
+							}
+						],
+						title: "About Life the Universe & Everything",
+						published: Time.new(1998, 10, 31)
+					},
+					{
+						id:1,
+						authors: [
+							{
+								last: "Bradley"
+							},
+							{
+								last: "Mokhesi-Parker"
+							}
+						],
+						title: "About Life the Universe & Everything",
+						published: Time.new(1998, 10, 31)
+					},
+					{
+						id:3,
+						authors: [
+							{
+								last: "Parker"
+							},
+							{
+								last: "Mokhesi-Parker"
+							},
+							{
+								last: "Austin"
+							},
+							{
+								last: "Durkheim"
+							}
+						],
+						title: "About Life the Universe & Everything",
+						published: Time.new(1998, 10, 31)
+					}
+				]
+
+				@library = Citation::Library.new(citations)
+
+			end
+
 			it "replaces inside the narrative" do
 				text = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus quis lectus metus, at posuere neque. Sed pharetra nibh eget orci convallis at posuere leo convallis. Sed blandit augue vitae augue scelerisque bibendum. Vivamus sit amet libero turpis, non venenatis urna. <citation_inside>1</citation_inside> In blandit, odio convallis suscipit venenatis, ante ipsum cursus augue."
 
+
+
 				expected = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus quis lectus metus, at posuere neque. Sed pharetra nibh eget orci convallis at posuere leo convallis. Sed blandit augue vitae augue scelerisque bibendum. Vivamus sit amet libero turpis, non venenatis urna. Bradley and Mokhesi-Parker (1998) In blandit, odio convallis suscipit venenatis, ante ipsum cursus augue."
-				@exporter.replace(@citation, text).should == expected
+				@exporter.replace(@library, text).should == expected
 			end
 
 			it "replaces outside the narrative" do
 				text = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus quis lectus metus, at posuere neque. Sed pharetra nibh eget orci convallis at posuere leo convallis. Sed blandit augue vitae augue scelerisque bibendum. Vivamus sit amet libero turpis, non venenatis urna. <citation_outside>1</citation_outside> In blandit, odio convallis suscipit venenatis, ante ipsum cursus augue."
 
 				expected = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus quis lectus metus, at posuere neque. Sed pharetra nibh eget orci convallis at posuere leo convallis. Sed blandit augue vitae augue scelerisque bibendum. Vivamus sit amet libero turpis, non venenatis urna. (Bradley & Mokhesi-Parker, 1998) In blandit, odio convallis suscipit venenatis, ante ipsum cursus augue."
-				@exporter.replace(@citation, text).should == expected
+				@exporter.replace(@library, text).should == expected
 			end
 
 			it "replaces inside and outside the narrative" do
 				text = "Lorem ipsum dolor sit amet <citation_inside>1</citation_inside>, consectetur adipiscing elit. Phasellus quis lectus metus, at posuere neque. Sed pharetra nibh eget orci convallis at posuere leo convallis. Sed blandit augue vitae augue scelerisque bibendum. Vivamus sit amet libero turpis, non venenatis urna. <citation_outside>1</citation_outside> In blandit, odio convallis suscipit venenatis, ante ipsum cursus augue."
 
 				expected = "Lorem ipsum dolor sit amet Bradley and Mokhesi-Parker (1998), consectetur adipiscing elit. Phasellus quis lectus metus, at posuere neque. Sed pharetra nibh eget orci convallis at posuere leo convallis. Sed blandit augue vitae augue scelerisque bibendum. Vivamus sit amet libero turpis, non venenatis urna. (Bradley & Mokhesi-Parker, 1998) In blandit, odio convallis suscipit venenatis, ante ipsum cursus augue."
-				@exporter.replace(@citation, text).should == expected
+				@exporter.replace(@library, text).should == expected
 			end
 
-			pending it "is knowledgeable about the frequency of a citation" do
-				#test with apa exporter and first, not first values
+			it "replaces multiple citations" do
+				text = "Lorem ipsum dolor sit amet <citation_inside>2</citation_inside>,<citation_outside>2</citation_outside> consectetur adipiscing elit. Phasellus quis lectus metus, at posuere neque. Sed pharetra nibh eget orci convallis at posuere leo convallis. Sed blandit augue vitae augue scelerisque bibendum. Vivamus sit amet libero turpis, non venenatis urna. <citation_outside>1</citation_outside> In blandit, odio convallis suscipit venenatis, ante ipsum cursus augue."
+
+				expected = "Lorem ipsum dolor sit amet Austin (1998),(Austin, 1998) consectetur adipiscing elit. Phasellus quis lectus metus, at posuere neque. Sed pharetra nibh eget orci convallis at posuere leo convallis. Sed blandit augue vitae augue scelerisque bibendum. Vivamus sit amet libero turpis, non venenatis urna. (Bradley & Mokhesi-Parker, 1998) In blandit, odio convallis suscipit venenatis, ante ipsum cursus augue."
+				@exporter.replace(@library, text).should == expected
+			end
+
+			it "is knowledgeable about the frequency of a citation" do
+				text = "Lorem ipsum dolor sit amet <citation_inside>3</citation_inside>,<citation_outside>3</citation_outside> consectetur adipiscing elit. Phasellus quis lectus metus, at posuere neque. Sed pharetra nibh eget orci convallis at posuere leo convallis. Sed blandit augue vitae augue scelerisque bibendum. Vivamus sit amet libero turpis, non venenatis urna. <citation_outside>1</citation_outside> In blandit, odio convallis suscipit venenatis, ante ipsum cursus augue."
+
+				expected = "Lorem ipsum dolor sit amet Parker, Mokhesi-Parker, Austin and Durkheim (1998),(Parker et al., 1998) consectetur adipiscing elit. Phasellus quis lectus metus, at posuere neque. Sed pharetra nibh eget orci convallis at posuere leo convallis. Sed blandit augue vitae augue scelerisque bibendum. Vivamus sit amet libero turpis, non venenatis urna. (Bradley & Mokhesi-Parker, 1998) In blandit, odio convallis suscipit venenatis, ante ipsum cursus augue."
+				@exporter.replace(@library, text).should == expected
 			end
 		end
 

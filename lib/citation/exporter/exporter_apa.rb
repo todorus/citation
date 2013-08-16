@@ -49,6 +49,30 @@ module Citation
 			
 		end
 
+		def replace library, text
+
+			grouped = Scanner.scan(text).group_by{|m| m[:id]}
+
+			id = nil
+			grouped.each do |g|
+
+				id = g.first
+				count = 0
+				citation = library.find(id)
+
+				g.shift
+				g[0].each do |c|
+					#return {citation: citation, options: {narrative: c[:narrative], first: count==0}}
+					replacement = cite citation,{narrative: c[:narrative], first: count==0}
+					text = text.sub(c[:narrative] ? "<citation_inside>#{id}</citation_inside>" : "<citation_outside>#{id}</citation_outside>", replacement)
+					count+=1
+				end
+			end
+
+			return text
+
+		end
+
 		private 
 		def listMultiple(authors, andsymbol="and")
 			result = ""
@@ -99,12 +123,6 @@ module Citation
 			end
 
 			authorString
-		end
-
-		def replace citation, text
-
-			
-
 		end
 
 	end
